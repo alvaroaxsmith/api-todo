@@ -1,7 +1,9 @@
+import { CreateTodoDto } from './dto/create-todo.dto';
 import { TodoEntity } from './todo.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindOneOptions, DeepPartial, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @Injectable()
 export class TodoService {
@@ -14,7 +16,7 @@ export class TodoService {
             return await this.todoRepository.find();
         }
 
-        async findOneOrFail(id: string | FindOneOptions<TodoEntity>) {
+        async findOneOrFail(id: string) {
             try {
                 return await this.findOneOrFail(id);
             } catch (error) {
@@ -22,11 +24,11 @@ export class TodoService {
             }
         }
 
-        async create(data: DeepPartial<TodoEntity>[]) {
+        async create(data: CreateTodoDto) {
             return await this.todoRepository.save(this.todoRepository.create(data));
         }
 
-        async update(id: string, data: DeepPartial<TodoEntity>) {
+        async update(id: string, data: UpdateTodoDto) {
             const todo = await this.findOneOrFail(id);
 
             this.todoRepository.merge(todo, data);
